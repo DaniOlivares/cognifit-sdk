@@ -14,7 +14,13 @@ export class CognifitSdkResponse {
     this.typeValue = this._formatType(data.mode);
     this.keyValue = data.key;
     this.justCalculated = data.hasOwnProperty('calculated') ? data.calculated : false;
-    this.eventPayload = new CognifitSdkEvent(data.hasOwnProperty('eventPayload') ? data.eventPayload : {});
+    if (data.hasOwnProperty('eventPayload')) {
+      this.eventPayload = new CognifitSdkEvent(data.eventPayload || {});
+    } else if (data.hasOwnProperty('body')) {
+      this.eventPayload = new CognifitSdkEvent(data.body || {});
+    } else {
+      this.eventPayload = new CognifitSdkEvent({});
+    }
     // tslint:disable-next-line:no-console
     console.log(this.status);
     // tslint:disable-next-line:no-console
