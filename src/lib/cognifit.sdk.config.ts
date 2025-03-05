@@ -124,7 +124,7 @@ export class CognifitSdkConfig {
                   return true;
                 }
               }
-              if((message.data.hasOwnProperty('status') && message.data.status === 'errorLogin')
+              if((message.data.hasOwnProperty('status') && ['errorLogin', 'completed', 'aborted'].includes(message.data.status))
                 || (message.data.hasOwnProperty('action') && message.data.action === 'close')
               ){
                 subscriber.complete();
