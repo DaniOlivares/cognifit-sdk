@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "test": "jest --config jestconfig.json",
+    "test": "jest --silent --config jestconfig.json",
+    "testverbose": "jest --config jestconfig.json",
     "build": "tsc",
     "format": "prettier --write \"src/*.ts\" \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",

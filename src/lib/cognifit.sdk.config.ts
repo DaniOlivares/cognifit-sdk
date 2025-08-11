@@ -25,6 +25,7 @@ export class CognifitSdkConfig {
   customTasks: any = {};
   listenEvents: false;
   additionalAttributesAndFlags = {};
+  projectRegion: string;
 
   checkResourceLoadedTimes = 0;
   resourceHtml5Loader = null;
@@ -61,6 +62,7 @@ export class CognifitSdkConfig {
     this.scale = this.filterScale(extraConfiguration);
     this.listenEvents = typeof extraConfiguration.listenEvents === 'boolean' ? extraConfiguration.listenEvents : false;
     this.additionalAttributesAndFlags = Object.assign({}, extraConfiguration.additionalAttributesAndFlags);
+    this.projectRegion = this.filterProjectRegion(extraConfiguration);
 
     // Overriding the jsVersion is NOT recommended because older versions are not guaranteed to be available or work correctly beyond 30 days.
     if (typeof extraConfiguration.jsVersion === 'string' && extraConfiguration.jsVersion) {
@@ -105,8 +107,8 @@ export class CognifitSdkConfig {
           // tslint:disable-next-line:no-console
           console.log(message);
 
-          if (typeof message.origin !== 'undefined') {
-            if (message.origin === 'https://prejs.cognifit.com' || message.origin === 'https://js.cognifit.com') {
+          if (typeof message.origin !== 'undefined') {        
+            if (['https://prejs.cognifit.com', 'https://js.cognifit.com','https://prejs.braintraining.cn', 'https://js.braintraining.cn'].includes(message.origin)) {
               // tslint:disable-next-line:no-console
               console.log('*** JSDK *** CognifitSdkConfig.loadMode 2');
               subscriber.next(new CognifitSdkResponse(message.data));
@@ -166,6 +168,13 @@ export class CognifitSdkConfig {
     console.log('*** JSDK *** CognifitSdkConfig.loadResource 2');
   }
 
+  getApiBaseUrl(): string {
+    if (this.projectRegion === 'CHINA') {
+      return this.sandbox ? 'https://preapi.braintraining.cn' : 'https://api.braintraining.cn';
+    }
+    return this.sandbox ? 'https://preapi.cognifit.com' : 'https://api.cognifit.com';
+  }
+
   private checkResourceLoaded(resolve: (value: string) => void, reject: (reason?: string) => void) {
     setTimeout(() => {
       // tslint:disable-next-line:no-console
@@ -199,7 +208,7 @@ export class CognifitSdkConfig {
     console.log('*** JSDK *** CognifitSdkConfig.setJsVersion 1');
     this.jsVersion = defaultJsVersion;
     const httpClient = new HttpClient(new HttpXhrBackend({ build: () => new XMLHttpRequest() }));
-    let url = this.sandbox ? 'https://preapi.cognifit.com' : 'https://api.cognifit.com';
+    let url = this.getApiBaseUrl();
     url += '/description/versions/sdkjs?v=' + this.sdkHtml5Version;
     url += '&c=' + this.clientId;
     const remoteJsVersion = await httpClient.get<any>(url).toPromise();
@@ -221,6 +230,11 @@ export class CognifitSdkConfig {
 
   private async getResourceUrl() {
     await this.setJsVersion(this.jsVersion);
+    if (this.projectRegion === 'CHINA') {
+      return this.sandbox
+        ? 'https://prejs.braintraining.cn/' + this.jsVersion + '/html5Loader.js'
+        : 'https://js.braintraining.cn/' + this.jsVersion + '/html5Loader.js';
+    }
     return this.sandbox
       ? 'https://prejs.cognifit.com/' + this.jsVersion + '/html5Loader.js'
       : 'https://js.cognifit.com/' + this.jsVersion + '/html5Loader.js';
@@ -298,6 +312,13 @@ export class CognifitSdkConfig {
       }
     }
     return 800;
+  }
+
+  private filterProjectRegion(extraConfiguration: any): string {
+    if (typeof extraConfiguration.projectRegion === 'string' && extraConfiguration.projectRegion === 'CHINA') {
+      return 'CHINA';
+    }
+    return 'US';
   }
 
   private buildExtraParams(): {} {
