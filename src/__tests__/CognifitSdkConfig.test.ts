@@ -58,7 +58,7 @@ test('Testing CognifitSdkConfig extraConfiguration', () => {
 });
 
 test('Testing CognifitSdkConfig extraConfiguration in China', () => {
-  const cognifitSdkConfig = new CognifitSdkConfig('', '', '', {projectRegion: 'CHINA'});
+  const cognifitSdkConfig = new CognifitSdkConfig('', '', '', { projectRegion: 'CHINA' });
   expect(cognifitSdkConfig.getAccessToken()).toBe('');
 
   const accessToken = 'EXAMPLE_ACCESS_TOKEN';

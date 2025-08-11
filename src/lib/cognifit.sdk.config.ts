@@ -107,8 +107,15 @@ export class CognifitSdkConfig {
           // tslint:disable-next-line:no-console
           console.log(message);
 
-          if (typeof message.origin !== 'undefined') {        
-            if (['https://prejs.cognifit.com', 'https://js.cognifit.com','https://prejs.braintraining.cn', 'https://js.braintraining.cn'].includes(message.origin)) {
+          if (typeof message.origin !== 'undefined') {
+            if (
+              [
+                'https://prejs.cognifit.com',
+                'https://js.cognifit.com',
+                'https://prejs.braintraining.cn',
+                'https://js.braintraining.cn',
+              ].includes(message.origin)
+            ) {
               // tslint:disable-next-line:no-console
               console.log('*** JSDK *** CognifitSdkConfig.loadMode 2');
               subscriber.next(new CognifitSdkResponse(message.data));
