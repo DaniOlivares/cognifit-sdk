@@ -49,7 +49,8 @@ Connect your Angular web apps with CogniFit. Launch CogniFit session for your us
         preferredMobileOrientation: '', // '' (empty), 'landscape' or 'portrait'. This applies only on mobile browsers or embedded webviews
         isFullscreenEnabled: true,      // Default true. If false the App will consider that the browser doesn't support fullscreen mode.
         scale: 100,                     // Default 800. Maximum value used to display values.
-        listenEvents: true              // Default false. If true, events will be triggered during session life.
+        listenEvents: true,             // Default false. If true, events will be triggered during session life.
+        projectRegion: 'US'             // Default 'US' for cognifit.com. 'CHINA' for braintraining.cn
       }   
     );
   
